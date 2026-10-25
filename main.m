@@ -40,7 +40,6 @@ NSString* getExactDeviceModel() {
     uname(&systemInfo);
     NSString *code = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
     
-    // Map common identifiers
     if ([code isEqualToString:@"iPhone15,2"]) return @"iPhone 14 Pro";
     if ([code isEqualToString:@"iPhone15,3"]) return @"iPhone 14 Pro Max";
     if ([code isEqualToString:@"iPhone16,1"]) return @"iPhone 15 Pro";
@@ -84,7 +83,7 @@ NSString* getExactDeviceModel() {
         
         floatingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         floatingBtn.frame = CGRectMake(30, 150, 55, 55);
-        floatingBtn.layer.cornerRadius = 0; // Vuông hoàn toàn, không bo góc
+        floatingBtn.layer.cornerRadius = 0; // Vuông hoàn toàn, không bo góc theo yêu cầu
         floatingBtn.clipsToBounds = YES;
         floatingBtn.layer.borderWidth = 2.0;
         floatingBtn.layer.borderColor = [UIColor colorWithRed:1.0 green:0.6 blue:0.8 alpha:1.0].CGColor;
@@ -104,7 +103,7 @@ NSString* getExactDeviceModel() {
         [floatingBtn addTarget:self action:@selector(toggleGUI) forControlEvents:UIControlEventTouchUpInside];
         
         // Add pan gesture for dragging
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:selector(handlePan:)];
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
         [floatingBtn addGestureRecognizer:pan];
         
         [keyWindow addSubview:floatingBtn];
@@ -254,7 +253,7 @@ NSString* getExactDeviceModel() {
 
 - (void)switchTab:(UIButton *)sender {
     playClickSound();
-    self.tab1.hidden = (sender.tag != 1);
+    self.tab1View.hidden = (sender.tag != 1);
     self.tab2View.hidden = (sender.tag != 2);
     self.tab3View.hidden = (sender.tag != 3);
 }
@@ -297,7 +296,7 @@ NSString* getExactDeviceModel() {
     
     WKWebViewConfiguration *ytConfig = [[WKWebViewConfiguration alloc] init];
     ytConfig.allowsInlineMediaPlayback = YES;
-    self.youtubeWebView = [[WKWebView alloc] initWithFrame:contentRect.bounds configuration:ytConfig];
+    self.youtubeWebView = [[WKWebView alloc] initWithFrame:contentRect configuration:ytConfig];
     self.youtubeWebView.layer.cornerRadius = 12;
     self.youtubeWebView.clipsToBounds = YES;
     [self.youtubeWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://m.youtube.com"]]];
