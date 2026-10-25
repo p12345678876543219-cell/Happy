@@ -3,11 +3,11 @@ name: Build iOS Dylib
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch: # Cho phép bấm nút chạy thủ công trên web
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-latest # Sử dụng máy chủ macOS có sẵn công cụ biên dịch của Apple
+    runs-on: macos-latest
 
     steps:
     - name: Checkout repository
@@ -16,17 +16,14 @@ jobs:
     - name: Set up Xcode
       run: |
         sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-        echo "Xcode version:"
         xcodebuild -version
 
     - name: Compile Dylib for iOS (arm64)
       run: |
-        echo "Bắt đầu biên dịch main.m thành .dylib..."
         xcrun --sdk iphoneos clang -dynamiclib -arch arm64 main.m -o executor.dylib \
           -framework UIKit \
           -framework Foundation \
           -fobjc-arc
-        echo "Biên dịch thành công!"
 
     - name: Upload compiled Dylib
       uses: actions/upload-artifact@v4
