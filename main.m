@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 @interface ScriptExecutorUI : NSObject
 + (instancetype)sharedInstance;
@@ -26,7 +27,6 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (floatWindow) return;
 
-        // Tạo cửa sổ cho nút nổi
         floatWindow = [[UIWindow alloc] initWithFrame:CGRectMake(20, 150, 50, 50)];
         floatWindow.windowLevel = UIWindowLevelAlert + 99999;
         floatWindow.backgroundColor = [UIColor clearColor];
@@ -40,11 +40,11 @@
         btn.layer.borderColor = [UIColor whiteColor].CGColor;
         [btn addTarget:self action:@selector(toggleMenu) forControlEvents:UIControlEventTouchUpInside];
 
-        // Thêm cử chỉ kéo thả (Pan Gesture) để di chuyển nút nổi tự do
+        // Thêm cử chỉ kéo thả cho nút nổi
         UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
         [floatWindow addGestureRecognizer:panGesture];
 
-        // Tải ảnh nút bật/tắt từ link
+        // Tải icon từ link yêu cầu
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *url = [NSURL URLWithString:@"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMhtCHWrNb2M7tAlOyQV4EFSTLSNBoyv7XR5pvLhEScg&s=10"];
             NSData *data = [NSData dataWithContentsOfURL:url];
@@ -60,7 +60,6 @@
     });
 }
 
-// Xử lý kéo thả nút nổi trên màn hình
 - (void)handlePan:(UIPanGestureRecognizer *)gesture {
     CGPoint translation = [gesture translationInView:floatWindow];
     CGPoint center = floatWindow.center;
@@ -85,7 +84,7 @@
         bgImageView.clipsToBounds = YES;
         [menuWindow addSubview:bgImageView];
 
-        // Tải hình nền GUI từ link
+        // Tải hình nền GUI từ link yêu cầu
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *url = [NSURL URLWithString:@"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPQoYPqQXC_318g9DfOumCH0qvCPJ5Swbn_Dx_mX5Ykg&s=10"];
             NSData *data = [NSData dataWithContentsOfURL:url];
@@ -156,7 +155,6 @@
     scriptTextView.text = [UIPasteboard generalPasteboard].string ?: @"";
 }
 
-// Hàm tìm View Controller cấp cao nhất để hiển thị thông báo an toàn
 - (UIViewController *)topMostController {
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     UIViewController *topController = window.rootViewController;
