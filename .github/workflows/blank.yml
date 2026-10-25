@@ -23,6 +23,7 @@ jobs:
         xcrun --sdk iphoneos clang -dynamiclib -arch arm64 main.m -o executor.dylib \
           -framework UIKit \
           -framework Foundation \
+          -framework CoreGraphics \
           -fobjc-arc
 
     - name: Upload compiled Dylib
